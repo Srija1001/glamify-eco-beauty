@@ -5,26 +5,26 @@ const steps = [
   {
     icon: Camera,
     number: "01",
-    title: "Upload Empty Tubes",
-    description: "Take a photo of your used beauty product tubes through our easy-to-use app interface."
+    title: "Upload Your Empty Tubes",
+    description: "Take clear photos of your empty beauty product tubes through our mobile app or website. Make sure the product label is visible and the tube is clean and empty."
   },
   {
     icon: CheckCircle2,
     number: "02",
-    title: "Verification",
-    description: "Our delivery partners verify if the tubes are recyclable and collect them from your doorstep."
+    title: "Verification & Collection",
+    description: "Our delivery partners will verify if your tubes are recyclable by checking the material type and condition. Once approved, they'll collect the tubes from your doorstep at no extra cost."
   },
   {
     icon: Recycle,
     number: "03",
-    title: "Recycling Process",
-    description: "Your tubes are processed through our sustainable recycling partners, giving them a new life."
+    title: "Sustainable Recycling",
+    description: "Your empty tubes are sent to our certified recycling partners where they're cleaned, processed, and transformed into new materials, reducing environmental waste."
   },
   {
     icon: Gift,
     number: "04",
-    title: "Earn Rewards",
-    description: "Receive coins in your account that you can use to purchase trial packs and new products."
+    title: "Earn Coins Instantly",
+    description: "Receive 50 coins for each verified tube in your Glamify account. Use these coins to get trial packs, purchase products, or unlock exclusive member benefits!"
   }
 ];
 
@@ -37,10 +37,10 @@ const HowItWorks = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            How It Works
+            Tube Return Process
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of beauty lovers in our circular economy. It's simple, rewarding, and makes a real difference.
+            Turn your empty tubes into rewards! Here's how our simple tube return process works and how you can start earning coins today.
           </p>
         </div>
         
@@ -82,8 +82,28 @@ const HowItWorks = () => {
         </div>
         
         <div className="text-center">
+          <div className="bg-card rounded-2xl p-8 max-w-2xl mx-auto mb-8 shadow-soft border-2 border-border/50">
+            <h3 className="text-2xl font-bold text-foreground mb-4">Earn More Coins</h3>
+            <div className="grid md:grid-cols-3 gap-4 mb-6">
+              <div className="text-center">
+                <p className="text-3xl font-bold text-primary mb-1">50</p>
+                <p className="text-sm text-muted-foreground">Coins per verified tube</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-bold text-primary mb-1">100</p>
+                <p className="text-sm text-muted-foreground">Welcome bonus coins</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-bold text-primary mb-1">20</p>
+                <p className="text-sm text-muted-foreground">Coins = $1 value</p>
+              </div>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              The more tubes you return, the more coins you earn! Use your coins to try new products, get exclusive trial packs, or unlock member-only discounts.
+            </p>
+          </div>
           <Button variant="hero" size="lg">
-            Start Your Journey
+            Start Returning Tubes
           </Button>
         </div>
       </div>

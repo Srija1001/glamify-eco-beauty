@@ -11,8 +11,12 @@ const Index = () => {
       <Navbar />
       <Hero />
       <Features />
-      <HowItWorks />
-      <RewardsSection />
+      <div id="tube-return">
+        <HowItWorks />
+      </div>
+      <div id="rewards">
+        <RewardsSection />
+      </div>
       <Footer />
     </div>
   );
