@@ -1,0 +1,65 @@
+import { Leaf } from "lucide-react";
+
+const Footer = () => {
+  return (
+    <footer className="bg-foreground/5 border-t border-border py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-4 gap-8 mb-8">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-soft">
+                <Leaf className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Glamify
+              </span>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              Sustainable beauty shopping for a better tomorrow.
+            </p>
+          </div>
+          
+          {/* Shop */}
+          <div>
+            <h4 className="font-semibold text-foreground mb-4">Shop</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">All Products</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Skincare</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Makeup</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Haircare</a></li>
+            </ul>
+          </div>
+          
+          {/* Company */}
+          <div>
+            <h4 className="font-semibold text-foreground mb-4">Company</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">About Us</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Sustainability</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Blog</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Contact</a></li>
+            </ul>
+          </div>
+          
+          {/* Support */}
+          <div>
+            <h4 className="font-semibold text-foreground mb-4">Support</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Help Center</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Track Order</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Returns</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
+          <p>© 2025 Glamify. All rights reserved. Made with ♥ for sustainable beauty.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
