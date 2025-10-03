@@ -1,10 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Leaf, Menu, ShoppingBag, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
@@ -25,13 +40,13 @@ const Navbar = () => {
             <Link to="/shop" className="text-foreground hover:text-primary transition-colors font-medium">
               Shop
             </Link>
-            <a href="#tube-return" className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/tube-return" className="text-foreground hover:text-primary transition-colors font-medium">
               Tube Return
-            </a>
-            <a href="#rewards" className="text-foreground hover:text-primary transition-colors font-medium">
+            </Link>
+            <Link to="/rewards" className="text-foreground hover:text-primary transition-colors font-medium">
               Rewards
-            </a>
-            <a href="#about" className="text-foreground hover:text-primary transition-colors font-medium">
+            </Link>
+            <a href="/#about" className="text-foreground hover:text-primary transition-colors font-medium">
               About
             </a>
           </div>
@@ -41,12 +56,19 @@ const Navbar = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <ShoppingBag className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <User className="w-5 h-5" />
-            </Button>
-            <Button variant="default" className="hidden md:flex">
-              Sign In
-            </Button>
+            {session ? (
+              <Link to="/profile">
+                <Button variant="ghost" size="icon" className="hidden md:flex">
+                  <User className="w-5 h-5" />
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" className="hidden md:flex">
+                  Sign In
+                </Button>
+              </Link>
+            )}
             
             {/* Mobile menu button */}
             <Button
@@ -66,18 +88,28 @@ const Navbar = () => {
             <Link to="/shop" className="block text-foreground hover:text-primary transition-colors font-medium">
               Shop
             </Link>
-            <a href="#tube-return" className="block text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/tube-return" className="block text-foreground hover:text-primary transition-colors font-medium">
               Tube Return
-            </a>
-            <a href="#rewards" className="block text-foreground hover:text-primary transition-colors font-medium">
+            </Link>
+            <Link to="/rewards" className="block text-foreground hover:text-primary transition-colors font-medium">
               Rewards
-            </a>
-            <a href="#about" className="block text-foreground hover:text-primary transition-colors font-medium">
+            </Link>
+            <a href="/#about" className="block text-foreground hover:text-primary transition-colors font-medium">
               About
             </a>
-            <Button variant="default" className="w-full">
-              Sign In
-            </Button>
+            {session ? (
+              <Link to="/profile" className="block">
+                <Button variant="default" className="w-full">
+                  Profile
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth" className="block">
+                <Button variant="default" className="w-full">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         )}
       </div>
