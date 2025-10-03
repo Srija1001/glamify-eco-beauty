@@ -14,7 +14,138 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      coin_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          related_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description: string
+          id?: string
+          related_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          related_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          total_coins: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          total_coins?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          total_coins?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          amount_paid: number
+          coins_used: number
+          created_at: string
+          id: string
+          payment_method: string
+          product_name: string
+          product_type: string
+          user_id: string
+        }
+        Insert: {
+          amount_paid?: number
+          coins_used?: number
+          created_at?: string
+          id?: string
+          payment_method: string
+          product_name: string
+          product_type: string
+          user_id: string
+        }
+        Update: {
+          amount_paid?: number
+          coins_used?: number
+          created_at?: string
+          id?: string
+          payment_method?: string
+          product_name?: string
+          product_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tube_returns: {
+        Row: {
+          coins_earned: number | null
+          created_at: string
+          id: string
+          image_url: string
+          product_name: string
+          status: string
+          updated_at: string
+          user_id: string
+          verification_notes: string | null
+        }
+        Insert: {
+          coins_earned?: number | null
+          created_at?: string
+          id?: string
+          image_url: string
+          product_name: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          verification_notes?: string | null
+        }
+        Update: {
+          coins_earned?: number | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          product_name?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          verification_notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
