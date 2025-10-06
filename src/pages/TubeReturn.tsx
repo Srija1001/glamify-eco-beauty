@@ -31,9 +31,7 @@ const TubeReturn = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
+      if (session) {
         setUser(session.user);
         fetchReturns(session.user.id);
       }
@@ -42,11 +40,12 @@ const TubeReturn = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
+      if (session) {
         setUser(session.user);
         fetchReturns(session.user.id);
+      } else {
+        setUser(null);
+        setReturns([]);
       }
     });
 
@@ -79,7 +78,17 @@ const TubeReturn = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!productName || !imageFile || !user) {
+    
+    if (!user) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to submit your tube return",
+      });
+      navigate("/auth");
+      return;
+    }
+    
+    if (!productName || !imageFile) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields and upload an image",
@@ -260,13 +269,14 @@ const TubeReturn = () => {
             </Card>
           </div>
 
-          <div>
-            <h2 className="text-2xl font-bold text-foreground mb-6">Your Submissions</h2>
-            {returns.length === 0 ? (
-              <Card className="p-8 text-center">
-                <p className="text-muted-foreground">No tube returns yet. Submit your first tube to get started!</p>
-              </Card>
-            ) : (
+          {user && (
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-6">Your Submissions</h2>
+              {returns.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <p className="text-muted-foreground">No tube returns yet. Submit your first tube to get started!</p>
+                </Card>
+              ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {returns.map((returnItem) => (
                   <Card key={returnItem.id} className="p-6 shadow-soft">
@@ -293,7 +303,8 @@ const TubeReturn = () => {
                 ))}
               </div>
             )}
-          </div>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
