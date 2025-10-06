@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Coins, DollarSign, Info } from "lucide-react";
+import { Coins, IndianRupee, Info, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,14 @@ interface Product {
   size: string;
   ingredients: string;
   suitableFor: string;
+  quantity: string;
+  rating: number;
+  reviews: {
+    user: string;
+    rating: number;
+    comment: string;
+    date: string;
+  }[];
 }
 
 interface ProductCardProps {
@@ -33,17 +41,23 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
   return (
     <Card className="overflow-hidden hover:shadow-hover transition-all duration-300 border-2 border-border/50 flex flex-col">
       {/* Product Image */}
-      <div className="relative h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+      <div className="relative h-64 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center overflow-hidden">
         {isTrial && (
-          <Badge className="absolute top-4 right-4 bg-secondary">
+          <Badge className="absolute top-4 right-4 bg-secondary z-10">
             Trial Pack
           </Badge>
         )}
         <img 
           src={product.image} 
           alt={product.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
+        {/* Rating Badge */}
+        <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1 border border-border/50">
+          <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+          <span className="font-semibold text-sm">{product.rating}</span>
+          <span className="text-xs text-muted-foreground">({product.reviews.length})</span>
+        </div>
       </div>
 
       <CardHeader>
@@ -55,7 +69,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                 <Info className="w-4 h-4" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-2xl">{product.name}</DialogTitle>
                 <DialogDescription className="text-base pt-2">
@@ -63,7 +77,53 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                 </DialogDescription>
               </DialogHeader>
               
+              {/* Product Image in Dialog */}
+              <div className="relative h-72 rounded-lg overflow-hidden mt-4">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
               <div className="space-y-6 pt-4">
+                {/* Rating & Reviews Summary */}
+                <div className="bg-accent/20 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-semibold text-foreground">Customer Reviews</h4>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
+                        <span className="font-bold text-lg">{product.rating}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">({product.reviews.length} reviews)</span>
+                    </div>
+                  </div>
+                  
+                  {/* Individual Reviews */}
+                  <div className="space-y-4">
+                    {product.reviews.map((review, index) => (
+                      <div key={index} className="bg-background/50 rounded-lg p-3 border border-border/30">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <p className="font-medium text-sm">{review.user}</p>
+                            <div className="flex items-center gap-1 mt-1">
+                              {[...Array(5)].map((_, i) => (
+                                <Star 
+                                  key={i} 
+                                  className={`w-3 h-3 ${i < review.rating ? 'fill-yellow-500 text-yellow-500' : 'text-muted-foreground/30'}`} 
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <span className="text-xs text-muted-foreground">{review.date}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{review.comment}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div>
                   <h4 className="font-semibold text-foreground mb-3">Key Benefits</h4>
                   <ul className="grid grid-cols-2 gap-2">
@@ -76,9 +136,16 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                   </ul>
                 </div>
 
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Size</h4>
-                  <p className="text-muted-foreground">{product.size}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2">Size</h4>
+                    <p className="text-muted-foreground">{product.size}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-2">Quantity</h4>
+                    <p className="text-muted-foreground">{product.quantity}</p>
+                  </div>
                 </div>
 
                 <div>
@@ -99,6 +166,18 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                       : "Apply to clean, dry skin. Use as directed on the packaging. For best results, use consistently as part of your daily skincare routine."}
                   </p>
                 </div>
+
+                {/* Transparency Note */}
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                  <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                    <Info className="w-4 h-4" />
+                    Transparency Commitment
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    All our products are dermatologically tested, cruelty-free, and made with sustainably sourced ingredients. 
+                    We believe in complete transparency about what goes into our products and how they benefit your skin.
+                  </p>
+                </div>
               </div>
             </DialogContent>
           </Dialog>
@@ -108,9 +187,15 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
 
       <CardContent className="flex-1">
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="font-medium">Size:</span>
-            <span>{product.size}</span>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <span className="font-medium">Size:</span>
+              <span>{product.size}</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <span className="font-medium">Qty:</span>
+              <span>{product.quantity}</span>
+            </div>
           </div>
           
           <div>
@@ -125,10 +210,10 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
         <div className="w-full grid grid-cols-2 gap-4">
           <div className="text-center p-3 rounded-lg bg-primary/5 border border-primary/20">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <DollarSign className="w-4 h-4 text-primary" />
+              <IndianRupee className="w-4 h-4 text-primary" />
               <span className="text-sm text-muted-foreground">Money</span>
             </div>
-            <p className="text-xl font-bold text-foreground">${product.price}</p>
+            <p className="text-xl font-bold text-foreground">₹{product.price}</p>
           </div>
           
           <div className="text-center p-3 rounded-lg bg-secondary/5 border border-secondary/20">
@@ -143,7 +228,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
         {/* Action Buttons */}
         <div className="w-full grid grid-cols-2 gap-2">
           <Button variant="outline" className="w-full">
-            <DollarSign className="w-4 h-4 mr-1" />
+            <IndianRupee className="w-4 h-4 mr-1" />
             Buy Now
           </Button>
           <Button variant="default" className="w-full">
