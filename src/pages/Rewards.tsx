@@ -17,6 +17,8 @@ const Rewards = () => {
     totalEarned: 0,
     totalSpent: 0,
     currentBalance: 0,
+    trialProductsPurchased: 0,
+    totalPurchases: 0,
   });
 
   useEffect(() => {
@@ -73,11 +75,12 @@ const Rewards = () => {
       const earned = data?.filter(t => t.type === "earned").reduce((sum, t) => sum + t.amount, 0) || 0;
       const spent = data?.filter(t => t.type === "spent").reduce((sum, t) => sum + Math.abs(t.amount), 0) || 0;
       
-      setStats({
+      setStats(prev => ({
+        ...prev,
         totalEarned: earned,
         totalSpent: spent,
         currentBalance: earned - spent,
-      });
+      }));
     }
   };
 
@@ -91,6 +94,14 @@ const Rewards = () => {
       console.error("Error loading purchases:", error);
     } else {
       setPurchases(data || []);
+      
+      const trialProducts = data?.filter(p => p.product_type?.toLowerCase().includes('trial')).length || 0;
+      
+      setStats(prev => ({
+        ...prev,
+        trialProductsPurchased: trialProducts,
+        totalPurchases: data?.length || 0,
+      }));
     }
   };
 
@@ -104,12 +115,52 @@ const Rewards = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Your Rewards Dashboard
+              Rewards & Coins Dashboard
             </h1>
             <p className="text-lg text-muted-foreground">
-              Track your coins, transactions, and purchases
+              Track your coins, rewards, transactions, and purchases
             </p>
           </div>
+
+          {/* Rewards & Coins Overview */}
+          <Card className="p-8 mb-12 bg-gradient-to-br from-primary/5 to-primary/10">
+            <h2 className="text-2xl font-bold text-foreground mb-6 text-center">Your Rewards & Coins Summary</h2>
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Current Coin Balance:</span>
+                  <span className="text-2xl font-bold text-primary">{profile?.total_coins || 0} coins</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Total Coins Earned:</span>
+                  <span className="text-lg font-semibold text-green-500">{stats.totalEarned} coins</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Total Coins Used:</span>
+                  <span className="text-lg font-semibold text-orange-500">{stats.totalSpent} coins</span>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Trial Products Purchased:</span>
+                  <span className="text-2xl font-bold text-primary">{stats.trialProductsPurchased}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Total Purchases:</span>
+                  <span className="text-lg font-semibold text-foreground">{stats.totalPurchases}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Coins Saved:</span>
+                  <span className="text-lg font-semibold text-green-500">{stats.totalEarned} coins</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-center pt-6 border-t border-border">
+              <p className="text-sm text-muted-foreground">
+                🌟 Keep returning empty tubes to earn more coins and unlock exclusive trial products!
+              </p>
+            </div>
+          </Card>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <Card className="p-6 text-center">

@@ -44,7 +44,7 @@ const Navbar = () => {
               Tube Return
             </Link>
             <Link to="/rewards" className="text-foreground hover:text-primary transition-colors font-medium">
-              Rewards
+              Rewards & Coins
             </Link>
             <a href="/#about" className="text-foreground hover:text-primary transition-colors font-medium">
               About
@@ -92,7 +92,7 @@ const Navbar = () => {
               Tube Return
             </Link>
             <Link to="/rewards" className="block text-foreground hover:text-primary transition-colors font-medium">
-              Rewards
+              Rewards & Coins
             </Link>
             <a href="/#about" className="block text-foreground hover:text-primary transition-colors font-medium">
               About
