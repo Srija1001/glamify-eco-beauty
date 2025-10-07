@@ -46,16 +46,18 @@ const Navbar = () => {
             <Link to="/rewards" className="text-foreground hover:text-primary transition-colors font-medium">
               Rewards & Coins
             </Link>
-            <a href="/#about" className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/about" className="text-foreground hover:text-primary transition-colors font-medium">
               About
-            </a>
+            </Link>
           </div>
           
           {/* Right side actions */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <ShoppingBag className="w-5 h-5" />
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="hidden md:flex">
+                <ShoppingBag className="w-5 h-5" />
+              </Button>
+            </Link>
             {session ? (
               <Link to="/profile">
                 <Button variant="ghost" size="icon" className="hidden md:flex">
@@ -94,9 +96,9 @@ const Navbar = () => {
             <Link to="/rewards" className="block text-foreground hover:text-primary transition-colors font-medium">
               Rewards & Coins
             </Link>
-            <a href="/#about" className="block text-foreground hover:text-primary transition-colors font-medium">
+            <Link to="/about" className="block text-foreground hover:text-primary transition-colors font-medium">
               About
-            </a>
+            </Link>
             {session ? (
               <Link to="/profile" className="block">
                 <Button variant="default" className="w-full">
