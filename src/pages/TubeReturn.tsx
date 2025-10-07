@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Upload, CheckCircle, Clock, X } from "lucide-react";
+import { Upload, CheckCircle, Clock, X, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -152,6 +152,15 @@ const TubeReturn = () => {
       <Navbar />
       <main className="flex-grow bg-gradient-to-b from-background via-accent/5 to-background py-24">
         <div className="container mx-auto px-4 max-w-6xl">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 hover:bg-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Tube Return

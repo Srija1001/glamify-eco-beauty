@@ -1,14 +1,27 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Leaf, Users, Heart, Recycle } from "lucide-react";
+import { Leaf, Users, Heart, Recycle, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen">
       <Navbar />
       
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 hover:bg-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">

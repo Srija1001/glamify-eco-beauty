@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Coins, TrendingUp, TrendingDown, ShoppingBag } from "lucide-react";
+import { Coins, TrendingUp, TrendingDown, ShoppingBag, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Session } from "@supabase/supabase-js";
 
 const Rewards = () => {
@@ -113,6 +114,15 @@ const Rewards = () => {
       
       <main className="container mx-auto px-4 py-24">
         <div className="max-w-6xl mx-auto">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 hover:bg-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Rewards & Coins Dashboard

@@ -2,7 +2,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/ProductCard";
-import { Coins } from "lucide-react";
+import { Coins, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const generalProducts = [
   {
@@ -259,12 +261,24 @@ const trialProducts = [
 ];
 
 const Shop = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen">
       <Navbar />
       
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          {/* Back Button */}
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 hover:bg-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          
           {/* Header */}
           <div className="text-center mb-12 animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">

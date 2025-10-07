@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut } from "lucide-react";
+import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -131,6 +131,15 @@ const Profile = () => {
       <Navbar />
       <main className="flex-grow bg-gradient-to-b from-background via-accent/5 to-background py-24">
         <div className="container mx-auto px-4 max-w-6xl">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 hover:bg-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          
           <div className="flex justify-between items-center mb-12">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">

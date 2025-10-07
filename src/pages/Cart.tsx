@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { IndianRupee, Leaf, Coins, Trash2, Plus, Minus, Recycle, Sparkles } from "lucide-react";
+import { IndianRupee, Leaf, Coins, Trash2, Plus, Minus, Recycle, Sparkles, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CartItem {
   id: number;
@@ -18,6 +19,7 @@ interface CartItem {
 }
 
 const Cart = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
@@ -66,6 +68,14 @@ const Cart = () => {
       
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 hover:bg-accent"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
           <h1 className="text-4xl font-bold mb-8">Your Sustainable Cart</h1>
           
           <div className="grid lg:grid-cols-3 gap-8">
