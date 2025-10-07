@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface Profile {
   full_name: string;
@@ -241,6 +242,10 @@ const Profile = () => {
                 </div>
               )}
             </Card>
+          </div>
+
+          <div className="mb-12">
+            <ThemeToggle />
           </div>
 
           <Card className="p-8 shadow-soft">
