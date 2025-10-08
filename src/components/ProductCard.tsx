@@ -12,23 +12,23 @@ import {
 } from "@/components/ui/dialog";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   description: string;
   benefits: string[];
   price: number;
   coins: number;
-  image: string;
+  image: string | null;
   size: string;
   ingredients: string;
-  suitableFor: string;
+  suitable_for: string;
   quantity: string;
   rating: number;
   reviews: {
-    user: string;
+    user_name: string;
     rating: number;
     comment: string;
-    date: string;
+    review_date: string;
   }[];
 }
 
@@ -48,7 +48,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
           </Badge>
         )}
         <img 
-          src={product.image} 
+          src={product.image || '/placeholder.svg'} 
           alt={product.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
@@ -80,7 +80,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
               {/* Product Image in Dialog */}
               <div className="relative h-72 rounded-lg overflow-hidden mt-4">
                 <img 
-                  src={product.image} 
+                  src={product.image || '/placeholder.svg'} 
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
@@ -106,7 +106,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                       <div key={index} className="bg-background/50 rounded-lg p-3 border border-border/30">
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <p className="font-medium text-sm">{review.user}</p>
+                            <p className="font-medium text-sm">{review.user_name}</p>
                             <div className="flex items-center gap-1 mt-1">
                               {[...Array(5)].map((_, i) => (
                                 <Star 
@@ -116,7 +116,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                               ))}
                             </div>
                           </div>
-                          <span className="text-xs text-muted-foreground">{review.date}</span>
+                          <span className="text-xs text-muted-foreground">{review.review_date}</span>
                         </div>
                         <p className="text-sm text-muted-foreground">{review.comment}</p>
                       </div>
@@ -153,10 +153,10 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
                   <p className="text-muted-foreground">{product.ingredients}</p>
                 </div>
 
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Suitable For</h4>
-                  <p className="text-muted-foreground">{product.suitableFor}</p>
-                </div>
+          <div>
+            <h4 className="font-semibold text-foreground mb-2">Suitable For</h4>
+            <p className="text-muted-foreground">{product.suitable_for}</p>
+          </div>
 
                 <div className="bg-accent/20 rounded-lg p-4">
                   <h4 className="font-semibold text-foreground mb-2">How to Use</h4>
@@ -200,7 +200,7 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
           
           <div>
             <p className="text-sm font-medium text-foreground mb-2">Suitable for:</p>
-            <p className="text-sm text-muted-foreground line-clamp-2">{product.suitableFor}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2">{product.suitable_for}</p>
           </div>
         </div>
       </CardContent>
