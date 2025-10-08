@@ -44,6 +44,98 @@ export type Database = {
         }
         Relationships: []
       }
+      product_reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          product_id: string
+          rating: number
+          review_date: string
+          user_name: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          id?: string
+          product_id: string
+          rating: number
+          review_date?: string
+          user_name: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          product_id?: string
+          rating?: number
+          review_date?: string
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          benefits: string[]
+          coins: number
+          created_at: string
+          description: string
+          id: string
+          image: string | null
+          ingredients: string
+          is_trial: boolean | null
+          name: string
+          price: number
+          quantity: string
+          rating: number | null
+          size: string
+          suitable_for: string
+          updated_at: string
+        }
+        Insert: {
+          benefits?: string[]
+          coins: number
+          created_at?: string
+          description: string
+          id?: string
+          image?: string | null
+          ingredients: string
+          is_trial?: boolean | null
+          name: string
+          price: number
+          quantity: string
+          rating?: number | null
+          size: string
+          suitable_for: string
+          updated_at?: string
+        }
+        Update: {
+          benefits?: string[]
+          coins?: number
+          created_at?: string
+          description?: string
+          id?: string
+          image?: string | null
+          ingredients?: string
+          is_trial?: boolean | null
+          name?: string
+          price?: number
+          quantity?: string
+          rating?: number | null
+          size?: string
+          suitable_for?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
