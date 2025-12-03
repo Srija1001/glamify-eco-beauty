@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Upload, CheckCircle, Clock, X, ArrowLeft } from "lucide-react";
+import { Upload, CheckCircle, Clock, X, ArrowLeft, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -67,6 +67,14 @@ const TubeReturn = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File Too Large",
+          description: "Please upload an image smaller than 5MB",
+          variant: "destructive",
+        });
+        return;
+      }
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -99,29 +107,53 @@ const TubeReturn = () => {
 
     setLoading(true);
 
-    const { error } = await supabase.from("tube_returns").insert({
-      user_id: user.id,
-      product_name: productName,
-      image_url: imagePreview,
-      status: "pending",
-    });
+    try {
+      // Upload image to Supabase Storage
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('tube-returns')
+        .upload(fileName, imageFile);
 
-    if (error) {
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('tube-returns')
+        .getPublicUrl(fileName);
+
+      // Insert tube return record
+      const { error: insertError } = await supabase.from("tube_returns").insert({
+        user_id: user.id,
+        product_name: productName,
+        image_url: publicUrl,
+        status: "pending",
+      });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      toast({
+        title: "Tube Submitted Successfully!",
+        description: "Your tube return is being verified. You'll receive coins once approved.",
+      });
+      
+      setProductName("");
+      setImageFile(null);
+      setImagePreview("");
+      fetchReturns(user.id);
+    } catch (error: any) {
       toast({
         title: "Submission Failed",
         description: error.message,
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Tube Submitted Successfully!",
-        description: "Your tube return is being verified. You'll receive coins once approved.",
-      });
-      setProductName("");
-      setImageFile(null);
-      setImagePreview("");
-      fetchReturns(user.id);
     }
+    
     setLoading(false);
   };
 
@@ -195,6 +227,7 @@ const TubeReturn = () => {
                       onChange={handleImageChange}
                       required
                     />
+                    <p className="text-xs text-muted-foreground mt-1">Max file size: 5MB</p>
                   </div>
                   {imagePreview && (
                     <div className="mt-4">
@@ -208,9 +241,24 @@ const TubeReturn = () => {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={loading}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  {loading ? "Submitting..." : "Submit for Verification"}
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Submit for Verification
+                    </>
+                  )}
                 </Button>
+
+                {!user && (
+                  <p className="text-sm text-muted-foreground text-center">
+                    Please <Button variant="link" className="p-0 h-auto" onClick={() => navigate("/auth")}>sign in</Button> to submit tubes
+                  </p>
+                )}
 
                 <div className="bg-accent/10 p-4 rounded-lg">
                   <h3 className="font-semibold text-foreground mb-2">Guidelines:</h3>

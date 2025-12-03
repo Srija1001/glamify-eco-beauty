@@ -53,7 +53,7 @@ const Navbar = () => {
           
           {/* Right side actions */}
           <div className="flex items-center gap-4">
-            <Link to="/cart">
+            <Link to="/cart" className="relative">
               <Button variant="ghost" size="icon" className="hidden md:flex">
                 <ShoppingBag className="w-5 h-5" />
               </Button>

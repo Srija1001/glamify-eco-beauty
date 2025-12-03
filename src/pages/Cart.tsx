@@ -4,63 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { IndianRupee, Leaf, Coins, Trash2, Plus, Minus, Recycle, Sparkles, ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  coinsEarnable: number;
-  recyclable: boolean;
-}
+import { IndianRupee, Leaf, Coins, Trash2, Plus, Minus, Recycle, Sparkles, ArrowLeft, ShoppingBag } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "@/hooks/use-toast";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Vitamin C Serum",
-      price: 899,
-      quantity: 1,
-      image: "/placeholder.svg",
-      coinsEarnable: 50,
-      recyclable: true,
-    },
-    {
-      id: 2,
-      name: "Hydrating Face Cream",
-      price: 1299,
-      quantity: 2,
-      image: "/placeholder.svg",
-      coinsEarnable: 75,
-      recyclable: true,
-    },
-  ]);
+  const { items, removeFromCart, updateQuantity, totalPrice, totalCoins, clearCart } = useCart();
 
-  const updateQuantity = (id: number, change: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + change) }
-          : item
-      )
-    );
+  const handleCheckout = () => {
+    toast({
+      title: "Checkout",
+      description: "Checkout functionality coming soon!",
+    });
   };
 
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const totalCoinsEarnable = cartItems.reduce(
-    (sum, item) => sum + (item.recyclable ? item.coinsEarnable * item.quantity : 0),
-    0
-  );
-  const plasticSaved = cartItems.filter(item => item.recyclable).length * 15; // grams per tube
+  const plasticSaved = items.length * 15; // grams per tube
 
   return (
     <div className="min-h-screen">
@@ -81,164 +41,186 @@ const Cart = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
-              {cartItems.length === 0 ? (
+              {items.length === 0 ? (
                 <Card>
                   <CardContent className="py-16 text-center">
-                    <p className="text-muted-foreground">Your cart is empty</p>
+                    <ShoppingBag className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground mb-4">Your cart is empty</p>
+                    <Link to="/shop">
+                      <Button>Continue Shopping</Button>
+                    </Link>
                   </CardContent>
                 </Card>
               ) : (
-                cartItems.map((item) => (
-                  <Card key={item.id} className="overflow-hidden">
-                    <CardContent className="p-6">
-                      <div className="flex gap-4">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-24 h-24 object-cover rounded-lg"
-                        />
-                        
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-semibold text-lg">{item.name}</h3>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeItem(item.id)}
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
+                <>
+                  {items.map((item) => (
+                    <Card key={item.id} className="overflow-hidden">
+                      <CardContent className="p-6">
+                        <div className="flex gap-4">
+                          <Link to={`/product/${item.id}`}>
+                            <img
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.name}
+                              className="w-24 h-24 object-cover rounded-lg"
+                            />
+                          </Link>
                           
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-xl font-bold flex items-center">
-                              <IndianRupee className="w-4 h-4" />
-                              {item.price}
-                            </span>
-                            {item.recyclable && (
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start mb-2">
+                              <Link to={`/product/${item.id}`}>
+                                <h3 className="font-semibold text-lg hover:text-primary transition-colors">
+                                  {item.name}
+                                </h3>
+                              </Link>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeFromCart(item.id)}
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-xl font-bold flex items-center">
+                                <IndianRupee className="w-4 h-4" />
+                                {item.price}
+                              </span>
                               <Badge variant="secondary" className="gap-1">
                                 <Coins className="w-3 h-3" />
-                                +{item.coinsEarnable} coins
+                                +{item.coins} coins
                               </Badge>
-                            )}
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => updateQuantity(item.id, -1)}
-                              className="h-8 w-8"
-                            >
-                              <Minus className="w-3 h-3" />
-                            </Button>
-                            <span className="w-8 text-center font-medium">{item.quantity}</span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => updateQuantity(item.id, 1)}
-                              className="h-8 w-8"
-                            >
-                              <Plus className="w-3 h-3" />
-                            </Button>
+                              {item.is_trial && (
+                                <Badge variant="outline">Trial</Badge>
+                              )}
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                className="h-8 w-8"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </Button>
+                              <span className="w-8 text-center font-medium">{item.quantity}</span>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                className="h-8 w-8"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                      </CardContent>
+                    </Card>
+                  ))}
+                  <Button 
+                    variant="outline" 
+                    onClick={clearCart}
+                    className="w-full"
+                  >
+                    Clear Cart
+                  </Button>
+                </>
               )}
             </div>
 
             {/* Summary & Impact */}
-            <div className="space-y-4">
-              {/* Order Summary */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-semibold flex items-center">
-                      <IndianRupee className="w-4 h-4" />
-                      {subtotal}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Delivery</span>
-                    <span className="font-semibold text-primary">FREE</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between text-lg">
-                    <span className="font-bold">Total</span>
-                    <span className="font-bold flex items-center">
-                      <IndianRupee className="w-5 h-5" />
-                      {subtotal}
-                    </span>
-                  </div>
-                  <Button className="w-full" size="lg">
-                    Proceed to Checkout
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Sustainability Impact */}
-              <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Leaf className="w-5 h-5 text-primary" />
-                    Your Impact
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Coins className="w-5 h-5 text-primary" />
-                      <span className="text-sm">Coins You'll Earn</span>
+            {items.length > 0 && (
+              <div className="space-y-4">
+                {/* Order Summary */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Order Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
+                      <span className="font-semibold flex items-center">
+                        <IndianRupee className="w-4 h-4" />
+                        {totalPrice}
+                      </span>
                     </div>
-                    <span className="font-bold text-primary">{totalCoinsEarnable}</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Recycle className="w-5 h-5 text-primary" />
-                      <span className="text-sm">Potential Plastic Saved</span>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Delivery</span>
+                      <span className="font-semibold text-primary">FREE</span>
                     </div>
-                    <span className="font-bold text-primary">{plasticSaved}g</span>
-                  </div>
-                  
-                  <Separator className="bg-primary/20" />
-                  
-                  <div className="text-sm text-muted-foreground bg-background/50 rounded-lg p-3">
-                    <Sparkles className="w-4 h-4 inline mr-1 text-primary" />
-                    Return your empty tubes to earn these coins and help save the planet!
-                  </div>
-                </CardContent>
-              </Card>
+                    <Separator />
+                    <div className="flex justify-between text-lg">
+                      <span className="font-bold">Total</span>
+                      <span className="font-bold flex items-center">
+                        <IndianRupee className="w-5 h-5" />
+                        {totalPrice}
+                      </span>
+                    </div>
+                    <Button onClick={handleCheckout} className="w-full" size="lg">
+                      Proceed to Checkout
+                    </Button>
+                  </CardContent>
+                </Card>
 
-              {/* Eco Benefits */}
-              <Card className="bg-gradient-to-br from-accent/10 to-primary/10 border-accent/20">
-                <CardHeader>
-                  <CardTitle className="text-sm">Why Shop With Us?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 text-sm">
-                  <div className="flex items-start gap-2">
-                    <Leaf className="w-4 h-4 text-accent mt-0.5" />
-                    <span>100% recyclable packaging</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Coins className="w-4 h-4 text-accent mt-0.5" />
-                    <span>Earn rewards for returning empties</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Recycle className="w-4 h-4 text-accent mt-0.5" />
-                    <span>Support circular beauty economy</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                {/* Sustainability Impact */}
+                <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Leaf className="w-5 h-5 text-primary" />
+                      Your Impact
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-5 h-5 text-primary" />
+                        <span className="text-sm">Coins You'll Earn</span>
+                      </div>
+                      <span className="font-bold text-primary">{totalCoins}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Recycle className="w-5 h-5 text-primary" />
+                        <span className="text-sm">Potential Plastic Saved</span>
+                      </div>
+                      <span className="font-bold text-primary">{plasticSaved}g</span>
+                    </div>
+                    
+                    <Separator className="bg-primary/20" />
+                    
+                    <div className="text-sm text-muted-foreground bg-background/50 rounded-lg p-3">
+                      <Sparkles className="w-4 h-4 inline mr-1 text-primary" />
+                      Return your empty tubes to earn these coins and help save the planet!
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Eco Benefits */}
+                <Card className="bg-gradient-to-br from-accent/10 to-primary/10 border-accent/20">
+                  <CardHeader>
+                    <CardTitle className="text-sm">Why Shop With Us?</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm">
+                    <div className="flex items-start gap-2">
+                      <Leaf className="w-4 h-4 text-accent mt-0.5" />
+                      <span>100% recyclable packaging</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Coins className="w-4 h-4 text-accent mt-0.5" />
+                      <span>Earn rewards for returning empties</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Recycle className="w-4 h-4 text-accent mt-0.5" />
+                      <span>Support circular beauty economy</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         </div>
       </main>
