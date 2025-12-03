@@ -25,34 +25,21 @@ const Rewards = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (!session) {
-        navigate("/auth");
-      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (!session) {
-        navigate("/auth");
-      }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  useEffect(() => {
-    if (session) {
-      loadProfile();
-      loadTransactions();
-      loadPurchases();
-    }
-  }, [session]);
+  }, []);
 
   const loadProfile = async () => {
+    if (!session) return;
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", session?.user.id)
+      .eq("user_id", session.user.id)
       .single();
 
     if (error) {
@@ -106,7 +93,13 @@ const Rewards = () => {
     }
   };
 
-  if (!session) return null;
+  useEffect(() => {
+    if (session) {
+      loadProfile();
+      loadTransactions();
+      loadPurchases();
+    }
+  }, [session]);
 
   return (
     <div className="min-h-screen bg-background">
