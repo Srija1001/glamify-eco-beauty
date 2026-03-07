@@ -12,6 +12,7 @@ import Rewards from "./pages/Rewards";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 

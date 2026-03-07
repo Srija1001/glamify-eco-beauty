@@ -14,10 +14,7 @@ const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalCoins, clearCart } = useCart();
 
   const handleCheckout = () => {
-    toast({
-      title: "Checkout",
-      description: "Checkout functionality coming soon!",
-    });
+    navigate("/checkout");
   };
 
   const plasticSaved = items.length * 15; // grams per tube
