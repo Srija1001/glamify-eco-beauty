@@ -44,7 +44,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart({
+    const success = addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
@@ -53,6 +53,15 @@ const ProductDetail = () => {
       size: product.size,
       is_trial: product.is_trial,
     });
+    if (!success) {
+      toast({
+        title: "Sign in Required",
+        description: "Please sign in to add items to your cart.",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
     toast({
       title: "Added to Cart",
       description: `${product.name} has been added to your cart`,
