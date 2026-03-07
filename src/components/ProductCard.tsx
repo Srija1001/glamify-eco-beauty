@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Coins, IndianRupee, Info, Star, ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 
@@ -35,11 +35,12 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart({
+    const success = addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
@@ -48,6 +49,15 @@ const ProductCard = ({ product, isTrial = false }: ProductCardProps) => {
       size: product.size,
       is_trial: product.is_trial || isTrial,
     });
+    if (!success) {
+      toast({
+        title: "Sign in Required",
+        description: "Please sign in to add items to your cart.",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
     toast({
       title: "Added to Cart",
       description: `${product.name} has been added to your cart`,
