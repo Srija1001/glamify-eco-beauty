@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
 
 export interface CartItem {
   id: string;
@@ -13,13 +15,14 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
+  addToCart: (item: Omit<CartItem, "quantity">) => boolean;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
   totalCoins: number;
+  isLoggedIn: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,12 +32,31 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const saved = localStorage.getItem("glamify-cart");
     return saved ? JSON.parse(saved) : [];
   });
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      // Clear cart on logout
+      if (!session) {
+        setItems([]);
+        localStorage.removeItem("glamify-cart");
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("glamify-cart", JSON.stringify(items));
   }, [items]);
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
+  const addToCart = (item: Omit<CartItem, "quantity">): boolean => {
+    if (!session) {
+      return false; // not logged in
+    }
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
@@ -44,6 +66,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return [...prev, { ...item, quantity: 1 }];
     });
+    return true;
   };
 
   const removeFromCart = (id: string) => {
@@ -77,6 +100,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         totalItems,
         totalPrice,
         totalCoins,
+        isLoggedIn: !!session,
       }}
     >
       {children}

@@ -37,29 +37,32 @@ const Checkout = () => {
   });
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({ title: "Sign in Required", description: "Please sign in to checkout.", variant: "destructive" });
+        navigate("/auth");
+        return;
+      }
+      setIsLoggedIn(true);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("total_coins, full_name, email")
+        .eq("user_id", user.id)
+        .single();
+      if (profile) {
+        setUserCoins(profile.total_coins);
+        setAddress((prev) => ({ ...prev, fullName: profile.full_name || "" }));
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
     if (items.length === 0 && !orderPlaced) {
       navigate("/cart");
     }
   }, [items, navigate, orderPlaced]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setIsLoggedIn(true);
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("total_coins, full_name, email")
-          .eq("user_id", user.id)
-          .single();
-        if (profile) {
-          setUserCoins(profile.total_coins);
-          setAddress((prev) => ({ ...prev, fullName: profile.full_name || "" }));
-        }
-      }
-    };
-    fetchUser();
-  }, []);
 
   const coinDiscount = Math.min(coinsToUse, userCoins, totalPrice);
   const finalAmount = totalPrice - coinDiscount;
