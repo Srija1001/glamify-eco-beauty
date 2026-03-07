@@ -12,6 +12,7 @@ import Rewards from "./pages/Rewards";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/about" element={<About />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
