@@ -123,8 +123,19 @@ const Checkout = () => {
         body: { amount: finalAmount, currency: "INR" },
       });
 
-      if (error || !data?.order_id) {
-        throw new Error(error?.message || "Failed to create order");
+      console.log("Razorpay order response:", { data, error });
+
+      if (error) {
+        throw new Error(error.message || "Failed to create order");
+      }
+
+      if (!data?.order_id) {
+        throw new Error("No order_id returned from server");
+      }
+
+      const RazorpayClass = (window as any).Razorpay;
+      if (!RazorpayClass) {
+        throw new Error("Razorpay SDK not loaded. Please refresh the page.");
       }
 
       const options = {
@@ -135,7 +146,9 @@ const Checkout = () => {
         description: "Beauty Products Order",
         order_id: data.order_id,
         handler: async (response: any) => {
+          console.log("Razorpay payment success:", response);
           await recordOrder(response.razorpay_payment_id);
+          setLoading(false);
         },
         prefill: {
           name: address.fullName,
@@ -150,9 +163,15 @@ const Checkout = () => {
         },
       };
 
-      const rzp = new (window as any).Razorpay(options);
+      const rzp = new RazorpayClass(options);
+      rzp.on("payment.failed", (response: any) => {
+        console.error("Razorpay payment failed:", response.error);
+        setLoading(false);
+        toast({ title: "Payment Failed", description: response.error?.description || "Payment failed.", variant: "destructive" });
+      });
       rzp.open();
     } catch (err: any) {
+      console.error("Razorpay initiation error:", err);
       toast({ title: "Payment Error", description: err.message || "Could not initiate payment.", variant: "destructive" });
       setLoading(false);
     }
