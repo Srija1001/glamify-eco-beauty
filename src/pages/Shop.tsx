@@ -204,8 +204,22 @@ const Shop = () => {
 
           {/* Tabs for product categories */}
           {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-2xl border border-border overflow-hidden">
+                  <Skeleton className="h-56 w-full" />
+                  <div className="p-5 space-y-3">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                    <div className="flex justify-between pt-2">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-16" />
+                    </div>
+                    <Skeleton className="h-10 w-full rounded-lg" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <Tabs defaultValue="general" className="w-full">
