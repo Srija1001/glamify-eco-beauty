@@ -323,19 +323,11 @@ const Checkout = () => {
                       </div>
                     </label>
 
-                    <label className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${paymentMethod === "card" ? "border-primary bg-primary/5" : "border-border"}`}>
-                      <RadioGroupItem value="card" id="card" />
-                      <CreditCard className="w-5 h-5 text-primary" />
-                      <div className="flex-1">
-                        <p className="font-medium">Credit / Debit Card</p>
-                        <p className="text-sm text-muted-foreground">Visa, Mastercard, RuPay</p>
-                      </div>
-                    </label>
                   </RadioGroup>
 
-                  {(paymentMethod === "upi" || paymentMethod === "card") && (
+                  {paymentMethod === "upi" && (
                     <p className="mt-3 text-sm text-muted-foreground">
-                      You'll be redirected to Razorpay's secure payment page to complete your {paymentMethod === "upi" ? "UPI" : "card"} payment.
+                      You'll be redirected to Razorpay's secure payment page to complete your UPI payment.
                     </p>
                   )}
                 </CardContent>
