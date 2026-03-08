@@ -348,8 +348,12 @@ const Checkout = () => {
                   <div>
                     <Label htmlFor="pincode">Pincode</Label>
                     <Input id="pincode" placeholder="6-digit pincode" className="mt-1"
+                      maxLength={6}
                       value={address.pincode}
-                      onChange={(e) => setAddress({ ...address, pincode: e.target.value })} />
+                      onChange={(e) => setAddress({ ...address, pincode: e.target.value.replace(/\D/g, "").slice(0, 6) })} />
+                    {address.pincode && !isPincodeValid && (
+                      <p className="text-xs text-destructive mt-1">Enter a valid 6-digit pincode</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
