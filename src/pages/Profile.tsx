@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
-import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut, ArrowLeft } from "lucide-react";
+import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut, ArrowLeft, Package } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -226,6 +227,24 @@ const Profile = () => {
               Sign Out
             </Button>
           </div>
+
+          {/* My Orders quick link */}
+          <Link to="/orders">
+            <Card className="p-6 mb-12 shadow-soft hover:shadow-md transition-shadow cursor-pointer border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Package className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">My Orders</h2>
+                    <p className="text-sm text-muted-foreground">Track your orders and delivery status</p>
+                  </div>
+                </div>
+                <ArrowLeft className="w-5 h-5 text-muted-foreground rotate-180" />
+              </div>
+            </Card>
+          </Link>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <Card className="p-6 shadow-soft">

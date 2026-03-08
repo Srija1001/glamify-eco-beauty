@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Leaf, Menu, ShoppingBag, User } from "lucide-react";
+import { Leaf, Menu, ShoppingBag, User, Package } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,11 +66,18 @@ const Navbar = () => {
               )}
             </Link>
             {session ? (
-              <Link to="/profile">
-                <Button variant="ghost" size="icon" className="hidden md:flex">
-                  <User className="w-5 h-5" />
-                </Button>
-              </Link>
+              <>
+                <Link to="/orders">
+                  <Button variant="ghost" size="icon" className="hidden md:flex">
+                    <Package className="w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link to="/profile">
+                  <Button variant="ghost" size="icon" className="hidden md:flex">
+                    <User className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </>
             ) : (
               <Link to="/auth">
                 <Button variant="default" className="hidden md:flex">
@@ -107,11 +114,16 @@ const Navbar = () => {
               About
             </Link>
             {session ? (
-              <Link to="/profile" className="block">
-                <Button variant="default" className="w-full">
-                  Profile
-                </Button>
-              </Link>
+              <div className="space-y-2">
+                <Link to="/orders" className="block text-foreground hover:text-primary transition-colors font-medium">
+                  My Orders
+                </Link>
+                <Link to="/profile" className="block">
+                  <Button variant="default" className="w-full">
+                    Profile
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <Link to="/auth" className="block">
                 <Button variant="default" className="w-full">
