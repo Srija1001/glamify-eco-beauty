@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
