@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Leaf, Menu, ShoppingBag, User, Package } from "lucide-react";
+import { Menu, ShoppingBag, User, Package } from "lucide-react";
+import glamifyLogo from "@/assets/glamify-logo.png";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
