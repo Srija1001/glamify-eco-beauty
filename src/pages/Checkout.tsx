@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   IndianRupee, Coins, ArrowLeft, CreditCard, Truck, Wallet,
-  MapPin, Phone, User, CheckCircle2, ShoppingBag, Loader2
+  MapPin, Phone, User, CheckCircle2, ShoppingBag, Loader2, Package
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
