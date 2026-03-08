@@ -249,8 +249,13 @@ const Checkout = () => {
           <div className="container mx-auto px-4 max-w-lg text-center py-20">
             <CheckCircle2 className="w-20 h-20 text-primary mx-auto mb-6" />
             <h1 className="text-3xl font-bold mb-3">Order Confirmed!</h1>
+            {placedOrderNumber && (
+              <p className="text-lg font-mono bg-muted px-4 py-2 rounded-lg inline-block mb-3">
+                {placedOrderNumber}
+              </p>
+            )}
             <p className="text-muted-foreground mb-2">
-              Thank you for your sustainable purchase.
+              Thank you for your sustainable purchase. Track your order anytime.
             </p>
             {totalCoins > 0 && (
               <Badge variant="secondary" className="gap-1 text-base px-4 py-2 mb-6">
@@ -258,11 +263,11 @@ const Checkout = () => {
               </Badge>
             )}
             <div className="flex gap-4 justify-center mt-6">
-              <Button onClick={() => navigate("/shop")}>
-                <ShoppingBag className="w-4 h-4 mr-2" /> Continue Shopping
+              <Button onClick={() => navigate("/orders")}>
+                <Package className="w-4 h-4 mr-2" /> Track Order
               </Button>
-              <Button variant="outline" onClick={() => navigate("/profile")}>
-                View Orders
+              <Button variant="outline" onClick={() => navigate("/shop")}>
+                <ShoppingBag className="w-4 h-4 mr-2" /> Continue Shopping
               </Button>
             </div>
           </div>
