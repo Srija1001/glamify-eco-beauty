@@ -71,10 +71,51 @@ const Checkout = () => {
     address.fullName && address.phone && address.street &&
     address.city && address.state && address.pincode;
 
+  const [placedOrderNumber, setPlacedOrderNumber] = useState("");
+
   const recordOrder = async (paymentId?: string) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Create order
+    const { data: orderData, error: orderError } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user.id,
+        order_number: "temp", // will be overwritten by trigger
+        status: "confirmed",
+        payment_method: paymentMethod === "cod" ? "cod" : `razorpay_${paymentMethod}`,
+        subtotal: totalPrice,
+        coins_used: coinDiscount,
+        total_paid: finalAmount,
+        coins_earned: totalCoins,
+        shipping_name: address.fullName,
+        shipping_phone: address.phone,
+        shipping_street: address.street,
+        shipping_city: address.city,
+        shipping_state: address.state,
+        shipping_pincode: address.pincode,
+      })
+      .select()
+      .single();
+
+    if (orderError || !orderData) {
+      console.error("Order creation error:", orderError);
+      throw new Error("Failed to create order");
+    }
+
+    // Insert order items
+    const orderItems = items.map((item) => ({
+      order_id: orderData.id,
+      product_name: item.name,
+      product_type: item.is_trial ? "trial" : "general",
+      quantity: item.quantity,
+      price: item.price,
+      coins: item.coins,
+    }));
+    await supabase.from("order_items").insert(orderItems);
+
+    // Also insert into purchases for backward compat
     for (const item of items) {
       await supabase.from("purchases").insert({
         user_id: user.id,
@@ -91,7 +132,7 @@ const Checkout = () => {
         user_id: user.id,
         amount: -coinDiscount,
         type: "spent",
-        description: `Used ${coinDiscount} coins on order`,
+        description: `Used ${coinDiscount} coins on order ${orderData.order_number}`,
       });
       await supabase
         .from("profiles")
@@ -104,7 +145,7 @@ const Checkout = () => {
         user_id: user.id,
         amount: totalCoins,
         type: "earned",
-        description: `Earned from purchase`,
+        description: `Earned from order ${orderData.order_number}`,
       });
       await supabase
         .from("profiles")
@@ -112,9 +153,10 @@ const Checkout = () => {
         .eq("user_id", user.id);
     }
 
+    setPlacedOrderNumber(orderData.order_number);
     setOrderPlaced(true);
     clearCart();
-    toast({ title: "Order Placed! 🎉", description: "Your order has been placed successfully." });
+    toast({ title: "Order Placed! 🎉", description: `Order ${orderData.order_number} confirmed.` });
   };
 
   const initiateRazorpay = async () => {
