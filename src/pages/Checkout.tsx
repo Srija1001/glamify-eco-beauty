@@ -67,9 +67,16 @@ const Checkout = () => {
   const coinDiscount = Math.min(coinsToUse, userCoins, totalPrice);
   const finalAmount = totalPrice - coinDiscount;
 
+  const isPhoneValid = /^[6-9]\d{9}$/.test(address.phone);
+  const isPincodeValid = /^\d{6}$/.test(address.pincode);
+
   const isFormValid =
-    address.fullName && address.phone && address.street &&
-    address.city && address.state && address.pincode;
+    address.fullName.trim().length >= 2 &&
+    isPhoneValid &&
+    address.street.trim().length >= 5 &&
+    address.city.trim() &&
+    address.state.trim() &&
+    isPincodeValid;
 
   const [placedOrderNumber, setPlacedOrderNumber] = useState("");
 
@@ -312,9 +319,13 @@ const Checkout = () => {
                     <div className="relative mt-1">
                       <Phone className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                       <Input id="phone" placeholder="10-digit number" className="pl-9"
+                        maxLength={10}
                         value={address.phone}
-                        onChange={(e) => setAddress({ ...address, phone: e.target.value })} />
+                        onChange={(e) => setAddress({ ...address, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })} />
                     </div>
+                    {address.phone && !isPhoneValid && (
+                      <p className="text-xs text-destructive mt-1">Enter a valid 10-digit Indian phone number</p>
+                    )}
                   </div>
                   <div className="sm:col-span-2">
                     <Label htmlFor="street">Street Address</Label>
@@ -337,8 +348,12 @@ const Checkout = () => {
                   <div>
                     <Label htmlFor="pincode">Pincode</Label>
                     <Input id="pincode" placeholder="6-digit pincode" className="mt-1"
+                      maxLength={6}
                       value={address.pincode}
-                      onChange={(e) => setAddress({ ...address, pincode: e.target.value })} />
+                      onChange={(e) => setAddress({ ...address, pincode: e.target.value.replace(/\D/g, "").slice(0, 6) })} />
+                    {address.pincode && !isPincodeValid && (
+                      <p className="text-xs text-destructive mt-1">Enter a valid 6-digit pincode</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
