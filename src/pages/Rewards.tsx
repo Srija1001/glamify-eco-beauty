@@ -15,6 +15,7 @@ const Rewards = () => {
   const [profile, setProfile] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [purchases, setPurchases] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalEarned: 0,
     totalSpent: 0,
