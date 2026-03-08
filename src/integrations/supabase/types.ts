@@ -44,6 +44,107 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          coins: number
+          created_at: string
+          id: string
+          order_id: string
+          price: number
+          product_name: string
+          product_type: string
+          quantity: number
+        }
+        Insert: {
+          coins?: number
+          created_at?: string
+          id?: string
+          order_id: string
+          price: number
+          product_name: string
+          product_type: string
+          quantity?: number
+        }
+        Update: {
+          coins?: number
+          created_at?: string
+          id?: string
+          order_id?: string
+          price?: number
+          product_name?: string
+          product_type?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          coins_earned: number
+          coins_used: number
+          created_at: string
+          id: string
+          order_number: string
+          payment_method: string
+          shipping_city: string
+          shipping_name: string
+          shipping_phone: string
+          shipping_pincode: string
+          shipping_state: string
+          shipping_street: string
+          status: string
+          subtotal: number
+          total_paid: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          coins_earned?: number
+          coins_used?: number
+          created_at?: string
+          id?: string
+          order_number: string
+          payment_method: string
+          shipping_city: string
+          shipping_name: string
+          shipping_phone: string
+          shipping_pincode: string
+          shipping_state: string
+          shipping_street: string
+          status?: string
+          subtotal?: number
+          total_paid?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          coins_earned?: number
+          coins_used?: number
+          created_at?: string
+          id?: string
+          order_number?: string
+          payment_method?: string
+          shipping_city?: string
+          shipping_name?: string
+          shipping_phone?: string
+          shipping_pincode?: string
+          shipping_state?: string
+          shipping_street?: string
+          status?: string
+          subtotal?: number
+          total_paid?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       product_reviews: {
         Row: {
           comment: string

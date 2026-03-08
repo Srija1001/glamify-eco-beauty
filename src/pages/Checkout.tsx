@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   IndianRupee, Coins, ArrowLeft, CreditCard, Truck, Wallet,
-  MapPin, Phone, User, CheckCircle2, ShoppingBag, Loader2
+  MapPin, Phone, User, CheckCircle2, ShoppingBag, Loader2, Package
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
@@ -71,10 +71,51 @@ const Checkout = () => {
     address.fullName && address.phone && address.street &&
     address.city && address.state && address.pincode;
 
+  const [placedOrderNumber, setPlacedOrderNumber] = useState("");
+
   const recordOrder = async (paymentId?: string) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Create order
+    const { data: orderData, error: orderError } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user.id,
+        order_number: "temp", // will be overwritten by trigger
+        status: "confirmed",
+        payment_method: paymentMethod === "cod" ? "cod" : `razorpay_${paymentMethod}`,
+        subtotal: totalPrice,
+        coins_used: coinDiscount,
+        total_paid: finalAmount,
+        coins_earned: totalCoins,
+        shipping_name: address.fullName,
+        shipping_phone: address.phone,
+        shipping_street: address.street,
+        shipping_city: address.city,
+        shipping_state: address.state,
+        shipping_pincode: address.pincode,
+      })
+      .select()
+      .single();
+
+    if (orderError || !orderData) {
+      console.error("Order creation error:", orderError);
+      throw new Error("Failed to create order");
+    }
+
+    // Insert order items
+    const orderItems = items.map((item) => ({
+      order_id: orderData.id,
+      product_name: item.name,
+      product_type: item.is_trial ? "trial" : "general",
+      quantity: item.quantity,
+      price: item.price,
+      coins: item.coins,
+    }));
+    await supabase.from("order_items").insert(orderItems);
+
+    // Also insert into purchases for backward compat
     for (const item of items) {
       await supabase.from("purchases").insert({
         user_id: user.id,
@@ -91,7 +132,7 @@ const Checkout = () => {
         user_id: user.id,
         amount: -coinDiscount,
         type: "spent",
-        description: `Used ${coinDiscount} coins on order`,
+        description: `Used ${coinDiscount} coins on order ${orderData.order_number}`,
       });
       await supabase
         .from("profiles")
@@ -104,7 +145,7 @@ const Checkout = () => {
         user_id: user.id,
         amount: totalCoins,
         type: "earned",
-        description: `Earned from purchase`,
+        description: `Earned from order ${orderData.order_number}`,
       });
       await supabase
         .from("profiles")
@@ -112,9 +153,10 @@ const Checkout = () => {
         .eq("user_id", user.id);
     }
 
+    setPlacedOrderNumber(orderData.order_number);
     setOrderPlaced(true);
     clearCart();
-    toast({ title: "Order Placed! 🎉", description: "Your order has been placed successfully." });
+    toast({ title: "Order Placed! 🎉", description: `Order ${orderData.order_number} confirmed.` });
   };
 
   const initiateRazorpay = async () => {
@@ -207,8 +249,13 @@ const Checkout = () => {
           <div className="container mx-auto px-4 max-w-lg text-center py-20">
             <CheckCircle2 className="w-20 h-20 text-primary mx-auto mb-6" />
             <h1 className="text-3xl font-bold mb-3">Order Confirmed!</h1>
+            {placedOrderNumber && (
+              <p className="text-lg font-mono bg-muted px-4 py-2 rounded-lg inline-block mb-3">
+                {placedOrderNumber}
+              </p>
+            )}
             <p className="text-muted-foreground mb-2">
-              Thank you for your sustainable purchase.
+              Thank you for your sustainable purchase. Track your order anytime.
             </p>
             {totalCoins > 0 && (
               <Badge variant="secondary" className="gap-1 text-base px-4 py-2 mb-6">
@@ -216,11 +263,11 @@ const Checkout = () => {
               </Badge>
             )}
             <div className="flex gap-4 justify-center mt-6">
-              <Button onClick={() => navigate("/shop")}>
-                <ShoppingBag className="w-4 h-4 mr-2" /> Continue Shopping
+              <Button onClick={() => navigate("/orders")}>
+                <Package className="w-4 h-4 mr-2" /> Track Order
               </Button>
-              <Button variant="outline" onClick={() => navigate("/profile")}>
-                View Orders
+              <Button variant="outline" onClick={() => navigate("/shop")}>
+                <ShoppingBag className="w-4 h-4 mr-2" /> Continue Shopping
               </Button>
             </div>
           </div>
