@@ -97,9 +97,12 @@ const Rewards = () => {
 
   useEffect(() => {
     if (session) {
-      loadProfile();
-      loadTransactions();
-      loadPurchases();
+      setLoading(true);
+      Promise.all([loadProfile(), loadTransactions(), loadPurchases()]).finally(() =>
+        setLoading(false)
+      );
+    } else {
+      setLoading(false);
     }
   }, [session]);
 
