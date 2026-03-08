@@ -228,6 +228,24 @@ const Profile = () => {
             </Button>
           </div>
 
+          {/* My Orders quick link */}
+          <Link to="/orders">
+            <Card className="p-6 mb-12 shadow-soft hover:shadow-md transition-shadow cursor-pointer border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Package className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">My Orders</h2>
+                    <p className="text-sm text-muted-foreground">Track your orders and delivery status</p>
+                  </div>
+                </div>
+                <ArrowLeft className="w-5 h-5 text-muted-foreground rotate-180" />
+              </div>
+            </Card>
+          </Link>
+
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <Card className="p-6 shadow-soft">
               <div className="flex items-center gap-4 mb-4">

@@ -114,11 +114,16 @@ const Navbar = () => {
               About
             </Link>
             {session ? (
-              <Link to="/profile" className="block">
-                <Button variant="default" className="w-full">
-                  Profile
-                </Button>
-              </Link>
+              <div className="space-y-2">
+                <Link to="/orders" className="block text-foreground hover:text-primary transition-colors font-medium">
+                  My Orders
+                </Link>
+                <Link to="/profile" className="block">
+                  <Button variant="default" className="w-full">
+                    Profile
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <Link to="/auth" className="block">
                 <Button variant="default" className="w-full">
