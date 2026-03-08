@@ -25,10 +25,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Shop</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">All Products</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Skincare</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Makeup</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Haircare</a></li>
+              <li><Link to="/shop" className="text-muted-foreground hover:text-primary transition-colors text-sm">All Products</Link></li>
+              <li><Link to="/shop" className="text-muted-foreground hover:text-primary transition-colors text-sm">Skincare</Link></li>
+              <li><Link to="/shop" className="text-muted-foreground hover:text-primary transition-colors text-sm">Makeup</Link></li>
+              <li><Link to="/shop" className="text-muted-foreground hover:text-primary transition-colors text-sm">Haircare</Link></li>
             </ul>
           </div>
           
@@ -36,10 +36,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Company</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">About Us</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Sustainability</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Blog</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Contact</a></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">About Us</Link></li>
+              <li><Link to="/tube-return" className="text-muted-foreground hover:text-primary transition-colors text-sm">Sustainability</Link></li>
+              <li><Link to="/rewards" className="text-muted-foreground hover:text-primary transition-colors text-sm">Rewards</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">Contact</Link></li>
             </ul>
           </div>
           
@@ -47,10 +47,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Support</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Help Center</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Track Order</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Returns</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">Privacy Policy</a></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">Help Center</Link></li>
+              <li><Link to="/profile" className="text-muted-foreground hover:text-primary transition-colors text-sm">Track Order</Link></li>
+              <li><Link to="/tube-return" className="text-muted-foreground hover:text-primary transition-colors text-sm">Returns</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
