@@ -30,8 +30,8 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-soft">
-              <Leaf className="w-6 h-6 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-soft">
+              <img src={glamifyLogo} alt="Glamify logo" className="w-full h-full object-cover" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Glamify
