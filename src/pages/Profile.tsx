@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import { Coins, ShoppingBag, TrendingUp, TrendingDown, User, LogOut, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -121,8 +122,78 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow bg-gradient-to-b from-background via-accent/5 to-background py-24">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <Skeleton className="h-8 w-20 mb-6" />
+            <div className="mb-12">
+              <Skeleton className="h-10 w-48 mb-2" />
+              <Skeleton className="h-5 w-72" />
+            </div>
+
+            {/* Stats cards skeleton */}
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i} className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <Skeleton className="w-12 h-12 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-8 w-16" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-3 w-40" />
+                </Card>
+              ))}
+            </div>
+
+            {/* Account & Purchases skeleton */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <Card className="p-8">
+                <Skeleton className="h-7 w-40 mb-6" />
+                <div className="space-y-4">
+                  <div>
+                    <Skeleton className="h-4 w-12 mb-1" />
+                    <Skeleton className="h-6 w-40" />
+                  </div>
+                  <div>
+                    <Skeleton className="h-4 w-12 mb-1" />
+                    <Skeleton className="h-6 w-52" />
+                  </div>
+                </div>
+              </Card>
+              <Card className="p-8">
+                <Skeleton className="h-7 w-44 mb-6" />
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="border-b border-border/50 pb-3 mb-3">
+                    <Skeleton className="h-5 w-3/4 mb-2" />
+                    <Skeleton className="h-3 w-20 mb-2" />
+                    <Skeleton className="h-3 w-full" />
+                  </div>
+                ))}
+              </Card>
+            </div>
+
+            {/* Transaction history skeleton */}
+            <Card className="p-8">
+              <Skeleton className="h-7 w-48 mb-6" />
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex justify-between items-center p-4 rounded-lg bg-accent/5 mb-3">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="w-5 h-5 rounded" />
+                    <div>
+                      <Skeleton className="h-5 w-40 mb-1" />
+                      <Skeleton className="h-3 w-24" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-6 w-20" />
+                </div>
+              ))}
+            </Card>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
