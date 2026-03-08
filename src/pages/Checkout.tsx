@@ -67,9 +67,16 @@ const Checkout = () => {
   const coinDiscount = Math.min(coinsToUse, userCoins, totalPrice);
   const finalAmount = totalPrice - coinDiscount;
 
+  const isPhoneValid = /^[6-9]\d{9}$/.test(address.phone);
+  const isPincodeValid = /^\d{6}$/.test(address.pincode);
+
   const isFormValid =
-    address.fullName && address.phone && address.street &&
-    address.city && address.state && address.pincode;
+    address.fullName.trim().length >= 2 &&
+    isPhoneValid &&
+    address.street.trim().length >= 5 &&
+    address.city.trim() &&
+    address.state.trim() &&
+    isPincodeValid;
 
   const [placedOrderNumber, setPlacedOrderNumber] = useState("");
 
