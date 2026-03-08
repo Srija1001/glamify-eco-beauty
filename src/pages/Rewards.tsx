@@ -248,7 +248,7 @@ const Rewards = () => {
                             )}
                             {purchase.amount_paid > 0 && (
                               <span className="text-foreground">
-                                ${purchase.amount_paid}
+                                ₹{purchase.amount_paid}
                               </span>
                             )}
                           </div>

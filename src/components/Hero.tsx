@@ -36,12 +36,16 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg">
-                Start Shopping
-              </Button>
-              <Button variant="feature" size="lg">
-                Learn More
-              </Button>
+              <Link to="/shop">
+                <Button variant="hero" size="lg">
+                  Start Shopping
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button variant="feature" size="lg">
+                  Learn More
+                </Button>
+              </Link>
             </div>
             
             <div className="flex gap-8 pt-8">

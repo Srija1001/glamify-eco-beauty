@@ -56,7 +56,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 Glamify. All rights reserved. Made with ♥ for sustainable beauty.</p>
+          <p>© 2026 Glamify. All rights reserved. Made with ♥ for sustainable beauty.</p>
         </div>
       </div>
     </footer>
