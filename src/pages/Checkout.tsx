@@ -319,9 +319,13 @@ const Checkout = () => {
                     <div className="relative mt-1">
                       <Phone className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                       <Input id="phone" placeholder="10-digit number" className="pl-9"
+                        maxLength={10}
                         value={address.phone}
-                        onChange={(e) => setAddress({ ...address, phone: e.target.value })} />
+                        onChange={(e) => setAddress({ ...address, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })} />
                     </div>
+                    {address.phone && !isPhoneValid && (
+                      <p className="text-xs text-destructive mt-1">Enter a valid 10-digit Indian phone number</p>
+                    )}
                   </div>
                   <div className="sm:col-span-2">
                     <Label htmlFor="street">Street Address</Label>
