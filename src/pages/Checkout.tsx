@@ -71,6 +71,93 @@ const Checkout = () => {
     address.fullName && address.phone && address.street &&
     address.city && address.state && address.pincode;
 
+  const recordOrder = async (paymentId?: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    for (const item of items) {
+      await supabase.from("purchases").insert({
+        user_id: user.id,
+        product_name: item.name,
+        product_type: item.is_trial ? "trial" : "general",
+        amount_paid: item.price * item.quantity - (coinDiscount * (item.price * item.quantity / totalPrice)),
+        coins_used: Math.round(coinDiscount * (item.price * item.quantity / totalPrice)),
+        payment_method: paymentMethod === "cod" ? "cod" : `razorpay_${paymentMethod}`,
+      });
+    }
+
+    if (coinDiscount > 0) {
+      await supabase.from("coin_transactions").insert({
+        user_id: user.id,
+        amount: -coinDiscount,
+        type: "spent",
+        description: `Used ${coinDiscount} coins on order`,
+      });
+      await supabase
+        .from("profiles")
+        .update({ total_coins: userCoins - coinDiscount })
+        .eq("user_id", user.id);
+    }
+
+    if (totalCoins > 0) {
+      await supabase.from("coin_transactions").insert({
+        user_id: user.id,
+        amount: totalCoins,
+        type: "earned",
+        description: `Earned from purchase`,
+      });
+      await supabase
+        .from("profiles")
+        .update({ total_coins: userCoins - coinDiscount + totalCoins })
+        .eq("user_id", user.id);
+    }
+
+    setOrderPlaced(true);
+    clearCart();
+    toast({ title: "Order Placed! 🎉", description: "Your order has been placed successfully." });
+  };
+
+  const initiateRazorpay = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke("create-razorpay-order", {
+        body: { amount: finalAmount, currency: "INR" },
+      });
+
+      if (error || !data?.order_id) {
+        throw new Error(error?.message || "Failed to create order");
+      }
+
+      const options = {
+        key: "rzp_test_SOklHhkLIXrLTB",
+        amount: data.amount,
+        currency: data.currency,
+        name: "Glamify",
+        description: "Beauty Products Order",
+        order_id: data.order_id,
+        handler: async (response: any) => {
+          await recordOrder(response.razorpay_payment_id);
+        },
+        prefill: {
+          name: address.fullName,
+          contact: address.phone,
+        },
+        theme: { color: "#16a34a" },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            toast({ title: "Payment Cancelled", description: "You cancelled the payment.", variant: "destructive" });
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      toast({ title: "Payment Error", description: err.message || "Could not initiate payment.", variant: "destructive" });
+      setLoading(false);
+    }
+  };
+
   const handlePlaceOrder = async () => {
     if (!isFormValid) {
       toast({ title: "Missing Info", description: "Please fill all address fields.", variant: "destructive" });
@@ -79,59 +166,17 @@ const Checkout = () => {
 
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (user) {
-        // Record purchases
-        for (const item of items) {
-          await supabase.from("purchases").insert({
-            user_id: user.id,
-            product_name: item.name,
-            product_type: item.is_trial ? "trial" : "general",
-            amount_paid: item.price * item.quantity - (coinDiscount * (item.price * item.quantity / totalPrice)),
-            coins_used: Math.round(coinDiscount * (item.price * item.quantity / totalPrice)),
-            payment_method: paymentMethod,
-          });
-        }
-
-        // Deduct coins if used
-        if (coinDiscount > 0) {
-          await supabase.from("coin_transactions").insert({
-            user_id: user.id,
-            amount: -coinDiscount,
-            type: "spent",
-            description: `Used ${coinDiscount} coins on order`,
-          });
-
-          await supabase
-            .from("profiles")
-            .update({ total_coins: userCoins - coinDiscount })
-            .eq("user_id", user.id);
-        }
-
-        // Add earned coins
-        if (totalCoins > 0) {
-          await supabase.from("coin_transactions").insert({
-            user_id: user.id,
-            amount: totalCoins,
-            type: "earned",
-            description: `Earned from purchase`,
-          });
-
-          await supabase
-            .from("profiles")
-            .update({ total_coins: userCoins - coinDiscount + totalCoins })
-            .eq("user_id", user.id);
-        }
+      if (paymentMethod === "cod") {
+        await recordOrder();
+      } else {
+        // UPI and Card go through Razorpay
+        await initiateRazorpay();
+        return; // loading state managed by Razorpay handler
       }
-
-      setOrderPlaced(true);
-      clearCart();
-      toast({ title: "Order Placed! 🎉", description: "Your order has been placed successfully." });
     } catch (err) {
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
     } finally {
-      setLoading(false);
+      if (paymentMethod === "cod") setLoading(false);
     }
   };
 
