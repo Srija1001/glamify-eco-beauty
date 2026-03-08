@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/CartContext";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const { totalItems } = useCart();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
