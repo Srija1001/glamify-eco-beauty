@@ -314,30 +314,10 @@ const Checkout = () => {
                     </label>
                   </RadioGroup>
 
-                  {paymentMethod === "upi" && (
-                    <div className="mt-4">
-                      <Label htmlFor="upiId">UPI ID</Label>
-                      <Input id="upiId" placeholder="yourname@upi" className="mt-1" />
-                    </div>
-                  )}
-
-                  {paymentMethod === "card" && (
-                    <div className="mt-4 space-y-3">
-                      <div>
-                        <Label htmlFor="cardNumber">Card Number</Label>
-                        <Input id="cardNumber" placeholder="1234 5678 9012 3456" className="mt-1" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <Label htmlFor="expiry">Expiry</Label>
-                          <Input id="expiry" placeholder="MM/YY" className="mt-1" />
-                        </div>
-                        <div>
-                          <Label htmlFor="cvv">CVV</Label>
-                          <Input id="cvv" placeholder="123" className="mt-1" />
-                        </div>
-                      </div>
-                    </div>
+                  {(paymentMethod === "upi" || paymentMethod === "card") && (
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      You'll be redirected to Razorpay's secure payment page to complete your {paymentMethod === "upi" ? "UPI" : "card"} payment.
+                    </p>
                   )}
                 </CardContent>
               </Card>
