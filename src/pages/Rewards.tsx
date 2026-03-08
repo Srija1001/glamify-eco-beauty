@@ -130,7 +130,54 @@ const Rewards = () => {
             </p>
           </div>
 
-          {/* Rewards & Coins Overview */}
+          {loading ? (
+            <div className="space-y-12">
+              {/* Summary skeleton */}
+              <Card className="p-8">
+                <Skeleton className="h-7 w-64 mx-auto mb-6" />
+                <div className="grid md:grid-cols-2 gap-6">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="flex justify-between items-center">
+                      <Skeleton className="h-4 w-36" />
+                      <Skeleton className="h-6 w-20" />
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              {/* Stats cards skeleton */}
+              <div className="grid md:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i} className="p-6 text-center">
+                    <Skeleton className="w-12 h-12 rounded-full mx-auto mb-4" />
+                    <Skeleton className="h-4 w-24 mx-auto mb-2" />
+                    <Skeleton className="h-10 w-16 mx-auto" />
+                  </Card>
+                ))}
+              </div>
+
+              {/* Transactions & Purchases skeleton */}
+              <div className="grid md:grid-cols-2 gap-8">
+                {Array.from({ length: 2 }).map((_, col) => (
+                  <div key={col}>
+                    <Skeleton className="h-7 w-48 mb-6" />
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <Card key={i} className="p-4 mb-4">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <Skeleton className="h-5 w-40 mb-1" />
+                            <Skeleton className="h-3 w-24" />
+                          </div>
+                          <Skeleton className="h-6 w-16" />
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
           <Card className="p-8 mb-12 bg-gradient-to-br from-primary/5 to-primary/10">
             <h2 className="text-2xl font-bold text-foreground mb-6 text-center">Your Rewards & Coins Summary</h2>
             <div className="grid md:grid-cols-2 gap-6 mb-6">
