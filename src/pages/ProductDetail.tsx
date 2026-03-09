@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Star, ShoppingCart, Coins, Leaf, Check, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
+import AIProductAnalysis from "@/components/AIProductAnalysis";
 
 const ProductDetail = () => {
   const { id } = useParams();
