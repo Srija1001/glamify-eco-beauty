@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Star, ShoppingCart, Coins, Leaf, Check, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
+import AIProductAnalysis from "@/components/AIProductAnalysis";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -215,6 +216,9 @@ const ProductDetail = () => {
                 Return empty tube for <strong>{product.coins} bonus coins</strong>
               </span>
             </div>
+
+            {/* AI Product Analysis */}
+            <AIProductAnalysis product={product} />
           </div>
         </div>
 
