@@ -216,6 +216,9 @@ const ProductDetail = () => {
                 Return empty tube for <strong>{product.coins} bonus coins</strong>
               </span>
             </div>
+
+            {/* AI Product Analysis */}
+            <AIProductAnalysis product={product} />
           </div>
         </div>
 
