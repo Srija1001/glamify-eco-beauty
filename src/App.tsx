@@ -17,6 +17,7 @@ import ProductDetail from "./pages/ProductDetail";
 import ResetPassword from "./pages/ResetPassword";
 import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
+import BeautyAdvisorChat from "./components/BeautyAdvisorChat";
 
 const queryClient = new QueryClient();
 
